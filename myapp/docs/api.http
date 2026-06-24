@@ -1,0 +1,111 @@
+### NextDev API — HTTP Request Collection
+### Use with VS Code "REST Client" extension or IntelliJ HTTP Client
+
+@baseUrl = http://localhost:8000/api/v1
+@token = PASTE_TOKEN_HERE_AFTER_LOGIN
+
+### Health check
+GET {{baseUrl}}/health
+Accept: application/json
+
+### Register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Jane Smith",
+  "username": "janesmith",
+  "email": "jane@example.com",
+  "password": "Password1!",
+  "password_confirmation": "Password1!",
+  "locale": "en"
+}
+
+### Check username availability
+GET {{baseUrl}}/auth/check-username?username=janesmith
+Accept: application/json
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "dev@nextdev.io",
+  "password": "Password1!",
+  "remember": false,
+  "device_name": "REST Client"
+}
+
+### Get current user (requires token from login/register response)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Logout (current device)
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "all_devices": false
+}
+
+### Logout (all devices)
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "all_devices": true
+}
+
+### Forgot password
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "dev@nextdev.io"
+}
+
+### Reset password (token comes from the email link / mail log in local dev)
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+Accept: application/json
+
+{
+  "token": "PASTE_RESET_TOKEN_HERE",
+  "email": "dev@nextdev.io",
+  "password": "NewPassword1!",
+  "password_confirmation": "NewPassword1!"
+}
+
+### Validation error example — duplicate email
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Test",
+  "username": "testuser2",
+  "email": "dev@nextdev.io",
+  "password": "Password1!",
+  "password_confirmation": "Password1!"
+}
+
+### Validation error example — reserved username
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Test",
+  "username": "admin",
+  "email": "newuser@example.com",
+  "password": "Password1!",
+  "password_confirmation": "Password1!"
+}
